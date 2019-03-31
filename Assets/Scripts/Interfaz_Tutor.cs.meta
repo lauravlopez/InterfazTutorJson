@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: ebf8075759dad0b468bb2d465a238197
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - panelHola: {fileID: 1880939964955418, guid: 97988077fcc380e4b9a4c964961eb5e0,
+      type: 2}
+  - panel: {fileID: 1418755760563482, guid: 0f9245dbd44c2334d9c6ce4f88e7612f, type: 2}
+  - tutorButton: {fileID: 114147512756202122, guid: e90e23cb7be634943a2335d086225d5c,
+      type: 2}
+  - Next: {fileID: 114813059659375618, guid: ab9f500c23f64794d9af4b799d04baea, type: 2}
+  - Previous: {fileID: 114417922060369200, guid: ce0efc3c8ea01dc4fa6185c1f1090317,
+      type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
