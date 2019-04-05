@@ -4,12 +4,13 @@ using UnityEngine;
 using System.IO;
 
 public class MessageDataController : MonoBehaviour {
-    private MessageRoundData[] allMessageRoundData;
+    public MessageRoundData[] allMessageRoundData;
     private string gameDataFileName = "DataJson.json";
+   
  
-	// Update is called once per frame
-	public MessageRoundData GetCurrentMessageRoundData () {
-        return allMessageRoundData[0];
+	
+	public MessageRoundData GetCurrentMessageRoundData (int n) {
+        return allMessageRoundData[n];
 	}
 
     public void Awake()
@@ -17,6 +18,7 @@ public class MessageDataController : MonoBehaviour {
         LoadGameData();
     }
 
+    //cargar todos los datos de archivo json
     private void LoadGameData() {
         string filePath = Path.Combine(Application.streamingAssetsPath, gameDataFileName);
 

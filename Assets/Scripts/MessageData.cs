@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.IO;
 
 [System.Serializable]
 public class MessageData  
@@ -10,10 +10,4 @@ public class MessageData
 
     public bool GoodStateButton;
     public bool ExitButton;
-
-    public bool sendGoodStateButton()
-    {
-        bool state = GoodStateButton;
-        return state;
-    }
 }

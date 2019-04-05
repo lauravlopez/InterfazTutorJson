@@ -13,13 +13,17 @@ public class Interfaz_Tutor : MonoBehaviour {
     public Button Correct;
     public Button Incorrect;
     public Image UIImage;
+    public Image ExitPanel;
 
     public Text messageText;
     private MessageDataController messageDataController;
     private MessageRoundData currentMessageRoundData;
-    private MessageData[] messagePool;
+    private MessageData Datas;
+    public MessageData[] messagePool;
+
     private bool isRoundedActive;
-    private int messageIndex = 0;
+    public int messageIndex = 0;
+    private int nextRound = 0;
 
     //public List<Sprite> pantallaSprites = new List<Sprite>();
     //public Sprite[] pantallaSprites;
@@ -37,14 +41,14 @@ public class Interfaz_Tutor : MonoBehaviour {
         Correct.gameObject.SetActive(false);
         Incorrect.gameObject.SetActive(false);
         UIImage.gameObject.SetActive(false);
+        ExitPanel.gameObject.SetActive(false);
 
         messageDataController = FindObjectOfType<MessageDataController>();
-        currentMessageRoundData = messageDataController.GetCurrentMessageRoundData();
+        currentMessageRoundData = messageDataController.GetCurrentMessageRoundData(0);
         messagePool = currentMessageRoundData.messages;
-        //messageIndex = 0;
-
-        isRoundedActive = true;
+       
         ShowMessage();
+        
     }
 
     private void ShowMessage()
@@ -81,77 +85,141 @@ public class Interfaz_Tutor : MonoBehaviour {
         UIImage.gameObject.SetActive(false);
         Correct.gameObject.SetActive(false);
         Incorrect.gameObject.SetActive(false);
+        ExitPanel.gameObject.SetActive(false);
     }
 
-    public void NextImage() {
-        messageIndex = messageIndex + 1;
-        // pos = pos + 1;
-        // Sprite pantallaSprite = pantallaSprites[pos];
-        //  UIImage.sprite = pantallaSprite;
-        //Debug.Log(pantallaSprites[pos]);
-        MessageData messageData = messagePool[messageIndex];
-        messageText.text = messageData.messageText;
-        Previous.gameObject.SetActive(true);
-        
-        
-       if (messageIndex == messagePool.Length - 1) {
-                   Next.gameObject.SetActive(false);
-               }
-        /*
-        if (messageIndex == 2) {
-            Next.gameObject.SetActive(false);
-            Previous.gameObject.SetActive(false);
-            Correct.gameObject.SetActive(true);
-            Incorrect.gameObject.SetActive(true);
-        }*/
-    }
-
-    public void PreviousImage()
+    public void NextImage()
     {
-        messageIndex = messageIndex - 1;
-        MessageData messageData = messagePool[messageIndex];
-        messageText.text = messageData.messageText;
-        /* pos = pos - 1;
-         Sprite pantallaSprite = pantallaSprites[pos];
-         UIImage.sprite = pantallaSprite;
-         Debug.Log(pantallaSprites[pos]);*/
-         Next.gameObject.SetActive(true);
-         Conditions();
-    }
+       
+      if (messageIndex != messagePool.Length - 1)
+        {
+            messageIndex = messageIndex + 1;
+            int n = messagePool.Length;
+            Debug.Log("mi piscina es de posiciones " + n);
+            Debug.Log("estoy en la posicion" + messageIndex);
+            if ((messagePool[messageIndex].GoodStateButton == true) && (messagePool[messageIndex].ExitButton == true))
+                    {
+                       
 
-   public void CorrectState() {
-        NextImage();
+                        bool good = messagePool[messageIndex].GoodStateButton;
+                        bool bad = messagePool[messageIndex].ExitButton;
+                        string men = messagePool[messageIndex].messageText;
+
+                        Debug.Log("el estado bueno es " + good + " el estado malo es " + bad + " y el mensaje es :" + men);
+
+                        MessageData messageData = messagePool[messageIndex];
+
+                        messageText.text = messageData.messageText;
+                        Correct.gameObject.SetActive(true);
+                        Incorrect.gameObject.SetActive(true);
+                        Next.gameObject.SetActive(false);
+                        Previous.gameObject.SetActive(false);
+                        Debug.Log(messageIndex + "mensaje index");
+                        Debug.Log("estoy en el primer else");
+                        CorrectState();
+                    }
+                   else if ((messagePool[messageIndex].GoodStateButton == false) && (messagePool[messageIndex].ExitButton == false))
+                        {
+                            
+                            //Debug.Log("el estado bueno es " + good + " el estado malo es " + bad + " y el mensaje es :" + men);
+                            MessageData messageData = messagePool[messageIndex];
+                            messageText.text = messageData.messageText;
+                            Previous.gameObject.SetActive(true);
+                            Debug.Log(messageIndex + "mensaje index");
+                            Debug.Log("estoy en el segundo else");
+                        }
+            }
+        else
+            {
+               // NextRound();
+            }
+       
+    }
+    /*
+    else if (messageIndex == messagePool.Length - 1)
+
+    if (messageIndex == 2) {
         Next.gameObject.SetActive(false);
         Previous.gameObject.SetActive(false);
-        Correct.gameObject.SetActive(false);
-        Incorrect.gameObject.SetActive(false);
-        closeTutorButton.onClick.AddListener(Reset);
+        Correct.gameObject.SetActive(true);
+        Incorrect.gameObject.SetActive(true);
+    }*/
 
+
+    public void PreviousImage()
+        {
+            messageIndex = messageIndex - 1;
+            MessageData messageData = messagePool[messageIndex];
+            messageText.text = messageData.messageText;
+            /* pos = pos - 1;
+             Sprite pantallaSprite = pantallaSprites[pos];
+             UIImage.sprite = pantallaSprite;
+             Debug.Log(pantallaSprites[pos]);*/
+             Next.gameObject.SetActive(true);
+             Conditions();
+            //CorrectState();
+        }
+
+   public void CorrectState()
+ 
+        {         
+          
+           
+            closeTutorButton.onClick.AddListener(NextRound);
+            Correct.onClick.AddListener(Exit);
+            Incorrect.onClick.AddListener(IncorrectState);
+        } 
         
-    }
 
-    public void IncorrectState(){
-        messageIndex = messageIndex + 1;
-        NextImage();
-        Next.gameObject.SetActive(true);
-        Previous.gameObject.SetActive(false);
-        Correct.gameObject.SetActive(false);
-        Incorrect.gameObject.SetActive(false);
-    }
+    public void IncorrectState()
+        {
+        //------------- SI ESTA EN LA ULTIMA POS, NEXT ROUND..
+        if (messageIndex == messagePool.Length - 1)
+            {
+                messageIndex = 0;
+            }
+        else
+            {
+            // messageIndex = messageIndex + 1;
+            
+            NextRound();
+            Next.gameObject.SetActive(true);
+                Previous.gameObject.SetActive(false);
+                Correct.gameObject.SetActive(false);
+                Incorrect.gameObject.SetActive(false);
+            }
+        }
 
-    private void Reset()
-    {
-        messageIndex = 0;
-        MessageData messageData = messagePool[messageIndex];
-        messageText.text = messageData.messageText;
-        //Sprite pantallaSprite = pantallaSprites[pos];
-        //UIImage.sprite = pantallaSprite;
-    }
+    public void Exit()
+        {
+            Next.gameObject.SetActive(false);
+            Previous.gameObject.SetActive(false);
+            Correct.gameObject.SetActive(false);
+            Incorrect.gameObject.SetActive(false);
+            closeTutorButton.onClick.AddListener(NextRound);
+            ExitPanel.gameObject.SetActive(true);
+        }
 
+    private void NextRound()
+        {
+
+
+            messageIndex = 0;
+            nextRound = nextRound + 1;
+            currentMessageRoundData = messageDataController.GetCurrentMessageRoundData(nextRound); //get position n
+            messagePool = currentMessageRoundData.messages;
+           
+            MessageData messageData = messagePool[messageIndex];
+            messageText.text = messageData.messageText;
+            //Sprite pantallaSprite = pantallaSprites[pos];
+            //UIImage.sprite = pantallaSprite;
+        }
+
+
+   
+    /*
     private void state(MessageData m)
     {
-        bool states = m.sendGoodStateButton();
-
         if (states == true)
         {
             Next.gameObject.SetActive(false);
@@ -160,7 +228,7 @@ public class Interfaz_Tutor : MonoBehaviour {
             Incorrect.gameObject.SetActive(true);
             Debug.Log("el estado es true");
         }
-    }
+    }*/
 
     private void Conditions()
     {
